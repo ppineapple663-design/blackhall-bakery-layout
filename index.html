@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
+<title>Blackhall Street Bakery Layout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a two-panel drawing sheet, scaled plan beside a 3D model, with the schedule below. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #17202e; --muted: #5a6575; --line: #d7dde6;
+  --lapis: #1f4e8c; --saffron: #c9861c; --wall: #2b3442;
+  --z-front: #e5edf8; --z-pack: #e9f1e4; --z-bake: #f8eadb; --z-prep: #efe8f6; --z-boh: #e9ebee;
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --surface: #151c26; --ink: #e5eaf1; --muted: #9ba7b6; --line: #2a3442;
+  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de;
+  --z-front: #1a2535; --z-pack: #1b2820; --z-bake: #2c2218; --z-prep: #241f31; --z-boh: #20252c;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #151c26; --ink: #e5eaf1; --muted: #9ba7b6; --line: #2a3442;
+  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de;
+  --z-front: #1a2535; --z-pack: #1b2820; --z-bake: #2c2218; --z-prep: #241f31; --z-boh: #20252c;
+  color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+header { display: grid; gap: 8px; max-width: 70ch; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--lapis); }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 700; font-size: 19px; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lead { color: var(--muted); font-size: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.fact { font-family: var(--f-mono); font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--ink); background: var(--surface); }
+.sheets { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .sheets { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sub { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.plan-box { overflow-x: auto; }
+#plan { display: block; width: 100%; max-width: 380px; height: auto; margin: 0 auto; }
+#model { position: relative; width: 100%; aspect-ratio: 4 / 3.4; max-width: 100%; border-radius: 8px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); }
+#model canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+#model .hint { position: absolute; left: 10px; bottom: 8px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); pointer-events: none; }
+#model .fail { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; text-align: center; color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+button { font: 500 13px var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button:hover { border-color: var(--lapis); }
+button[aria-pressed="true"] { background: var(--lapis); color: var(--surface); border-color: var(--lapis); }
+button:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; align-items: start; }
+.key { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.key li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: baseline; }
+.badge { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--lapis); color: var(--surface); font: 600 11px var(--f-mono); }
+.badge.flow { background: var(--saffron); color: #17202e; border-radius: 4px; }
+.zone-row { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.zone-row:last-child { border-bottom: 0; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--line); transform: translateY(1px); }
+.zone-row b { font-weight: 600; }
+.zone-row .area { font-family: var(--f-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+.zone-row p { grid-column: 2 / 4; color: var(--muted); font-size: 14px; }
+.notes { color: var(--muted); font-size: 14px; display: grid; gap: 6px; max-width: 75ch; }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+svg text { font-family: var(--f-body); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Unit 4, 11-15 Blackhall Street, Paisley PA1 1TD</div>
+    <h1>Persian bakery: proposed layout</h1>
+    <p class="lead">A production bakery for sangak, barbari, taftoon and lavash, trading by delivery and collection only. There is a small pick-up counter with a minimal display, and no eating on site.</p>
+    <div class="facts">
+      <span class="fact">c. 6.5 m × 18.5 m</span>
+      <span class="fact">c. 120 m²</span>
+      <span class="fact">Delivery &amp; collection only</span>
+      <span class="fact">Indicative, from site photos</span>
+    </div>
+  </header>
+
+  <section class="sheets" aria-label="Floor plan and 3D model">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Floor plan</h2>
+        <span class="sub">Scale bar in metres</span>
+      </div>
+      <div class="controls">
+        <button id="toggleFlow" type="button" aria-pressed="true">Show workflow</button>
+      </div>
+      <div class="plan-box"><svg id="plan" role="img" aria-label="Floor plan of the proposed bakery layout"></svg></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>3D model</h2>
+        <span class="sub">Front and right-hand walls cut away</span>
+      </div>
+      <div class="controls">
+        <button type="button" data-view="corner" aria-pressed="true">Corner view</button>
+        <button type="button" data-view="front">From the street</button>
+        <button type="button" data-view="top">From above</button>
+        <button type="button" data-view="counter">At the counter</button>
+        <button type="button" id="toggleLabels" aria-pressed="true">Numbers</button>
+      </div>
+      <div id="model"><span class="hint">Drag to rotate · scroll or pinch to zoom</span></div>
+    </div>
+  </section>
+
+  <section class="cols">
+    <div class="panel">
+      <h2>Equipment and rooms</h2>
+      <ol class="key" id="key"></ol>
+    </div>
+    <div class="panel">
+      <h2>Zones</h2>
+      <div id="zones"></div>
+      <h2 style="margin-top:8px">Workflow</h2>
+      <ol class="key" id="flowKey"></ol>
+    </div>
+  </section>
+
+  <section class="notes" aria-label="Notes">
+    <h2 style="color:var(--ink)">Notes</h2>
+    <ul>
+      <li>Drawn from six site photographs on 10 November 2026. Dimensions, the cast-iron column positions and the door positions are approximate, and need confirming by a measured survey.</li>
+      <li>Fit-out finishes shown: hygienic white wall cladding, a resin floor and a suspended ceiling (left off the model so the inside is visible).</li>
+      <li>The sangak oven, deck oven and tanoor sit under one extraction canopy, with a gas interlock, ducted through the roof.</li>
+      <li>The rear door is proposed for flour deliveries and as a fire exit, subject to a building warrant. Staff WC is reached through a lobby, with no door opening directly into a food room.</li>
+      <li>Subject to building warrant, planning (use class) and environmental health registration with Renfrewshire Council.</li>
+    </ul>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const W = 6.5, D = 18.5;
+
+  const zones = [
+    { id: "front", name: "Collection & rider waiting", y0: 0, y1: 2.0, note: "Street door, bench for customers and delivery riders, no seating for eating." },
+    { id: "pack", name: "Counter, cooling & packing", y0: 2.0, y1: 5.0, note: "Collection counter with a small bread shelf behind, cooling racks and a packing bench for delivery orders." },
+    { id: "bake", name: "Bake", y0: 5.0, y1: 10.5, note: "Sangak pebble-bed oven, deck oven and tanoor under one canopy; shaping and peel bench in front." },
+    { id: "prep", name: "Dough & proving", y0: 10.5, y1: 14.5, note: "Two spiral mixers, dividing bench, prover and ingredients fridge." },
+    { id: "boh", name: "Stores, wash-up & staff", y0: 14.5, y1: 18.5, note: "Flour store off the rear goods door, pot-wash sink, staff lobby with lockers and WC." }
+  ];
+
+  // x across the unit (0 = left wall looking in from the street), y = depth from the street (m)
+  const items = [
+    { n: 1, label: "Customer and rider bench", parts: [{ s: "box", x: 0.15, y: 0.5, w: 0.45, d: 1.4, h: 0.45, m: "wood" }] },
+    { n: 2, label: "Collection counter", parts: [{ s: "box", x: 0.4, y: 2.0, w: 4.0, d: 0.6, h: 1.05, m: "counter" }] },
+    { n: 3, label: "Bread shelf (minimal display)", parts: [{ s: "box", x: 0.15, y: 2.9, w: 1.4, d: 0.45, h: 1.7, m: "wood" }] },
+    { n: 4, label: "Packing bench and bag station", parts: [{ s: "box", x: 5.75, y: 2.8, w: 0.65, d: 2.0, h: 0.9, m: "steel" }] },
+    { n: 5, label: "Cooling racks (2)", parts: [{ s: "rack", x: 2.3, y: 3.3, w: 0.6, d: 0.9, h: 1.8 }, { s: "rack", x: 3.2, y: 3.3, w: 0.6, d: 0.9, h: 1.8 }] },
+    { n: 6, label: "Wash-hand basins (3)", parts: [{ s: "box", x: 0.15, y: 4.3, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 0.15, y: 9.7, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 5.95, y: 13.6, w: 0.45, d: 0.5, h: 0.9, m: "white" }] },
+    { n: 7, label: "Sangak oven (pebble bed)", parts: [{ s: "box", x: 1.4, y: 5.8, w: 2.2, d: 2.2, h: 1.4, m: "brick" }] },
+    { n: 8, label: "Deck oven, 3 decks (barbari, taftoon)", parts: [{ s: "box", x: 4.3, y: 5.8, w: 1.9, d: 1.3, h: 1.7, m: "steel" }] },
+    { n: 9, label: "Tanoor (clay oven)", parts: [{ s: "cyl", x: 5.2, y: 8.5, r: 0.55, h: 1.0, m: "clay" }] },
+    { n: 10, label: "Shaping and peel bench", parts: [{ s: "box", x: 1.8, y: 8.7, w: 2.4, d: 0.8, h: 0.9, m: "steel" }] },
+    { n: 11, label: "Extraction canopy over ovens", plan: "dashed", parts: [{ s: "box", x: 1.2, y: 5.4, w: 5.2, d: 3.7, h: 0.45, z: 2.45, m: "canopy" }] },
+    { n: 12, label: "Spiral mixers (2)", parts: [{ s: "cyl", x: 5.8, y: 11.3, r: 0.38, h: 1.15, m: "steel" }, { s: "cyl", x: 5.8, y: 12.3, r: 0.38, h: 1.15, m: "steel" }] },
+    { n: 13, label: "Dough dividing bench", parts: [{ s: "box", x: 2.0, y: 11.0, w: 2.6, d: 1.0, h: 0.9, m: "steel" }] },
+    { n: 14, label: "Prover cabinet", parts: [{ s: "box", x: 0.15, y: 13.0, w: 0.8, d: 0.9, h: 2.0, m: "steel" }] },
+    { n: 15, label: "Ingredients fridge", parts: [{ s: "box", x: 3.0, y: 13.5, w: 0.75, d: 0.75, h: 1.95, m: "steel" }] },
+    { n: 16, label: "Flour and dry store, mezzanine over", room: { x: 0, y: 14.5, w: 2.6, d: 4.0 }, parts: [{ s: "box", x: 0.3, y: 15.1, w: 1.6, d: 1.2, h: 0.7, m: "sacks" }, { s: "box", x: 0, y: 14.5, w: 2.6, d: 4.0, h: 0.12, z: 2.6, m: "deck", plan: "none" }] },
+    { n: 17, label: "Pot-wash double sink", parts: [{ s: "box", x: 2.9, y: 17.8, w: 1.5, d: 0.6, h: 0.9, m: "steel" }] },
+    { n: 18, label: "Staff lobby and lockers", room: { x: 4.6, y: 14.8, w: 1.9, d: 1.4 }, parts: [{ s: "box", x: 6.0, y: 14.95, w: 0.4, d: 1.1, h: 1.8, m: "locker" }] },
+    { n: 19, label: "Staff WC", room: { x: 4.6, y: 16.2, w: 1.9, d: 2.3 }, parts: [{ s: "box", x: 5.85, y: 17.7, w: 0.45, d: 0.6, h: 0.45, m: "white" }] }
+  ];
+  const columns = [{ x: 0.9, y: 6.9 }, { x: 0.9, y: 12.6 }];
+  const partitions = [
+    [2.6, 14.5, 2.6, 15.6], [2.6, 16.5, 2.6, 18.5], [0, 14.5, 2.6, 14.5],
+    [4.6, 14.8, 4.6, 18.5], [4.6, 14.8, 4.8, 14.8], [5.6, 14.8, 6.5, 14.8],
+    [4.6, 16.2, 5.6, 16.2], [6.3, 16.2, 6.5, 16.2]
+  ];
+  // outer wall door openings: [wall, from, to]
+  const doors = [
+    { wall: "front", a: 4.6, b: 5.8, label: "Street door" },
+    { wall: "rear", a: 0.8, b: 1.8, label: "Goods in / fire exit (proposed)" }
+  ];
+  const flow = [
+    { k: "A", label: "Flour delivered to the dry store", x: 1.3, y: 16.4 },
+    { x: 3.6, y: 16.05 },
+    { k: "B", label: "Mix, divide and prove", x: 3.6, y: 12.5 },
+    { k: "C", label: "Shape and load the peel", x: 3.0, y: 9.1 },
+    { k: "D", label: "Bake: sangak, deck oven or tanoor", x: 2.5, y: 7.2 },
+    { k: "E", label: "Cool on the racks", x: 2.8, y: 3.75 },
+    { k: "F", label: "Pack delivery orders", x: 5.1, y: 3.8 },
+    { k: "G", label: "Hand over at the counter or to the rider", x: 5.2, y: 1.0 }
+  ];
+
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+  // ---------- Floor plan ----------
+  const S = 34, ML = 34, MR = 34, MT = 34, MB = 70;
+  const PW = ML + W * S + MR, PH = MT + D * S + MB;
+  const px = (x) => ML + x * S, py = (y) => MT + (D - y) * S;
+  const svg = document.getElementById("plan");
+  svg.setAttribute("viewBox", `0 0 ${PW} ${PH}`);
+  let flowGroup;
+
+  function drawPlan() {
+    svg.innerHTML = "";
+    const ink = css("--ink"), muted = css("--muted"), wall = css("--wall"), lapis = css("--lapis"), saffron = css("--saffron"), surface = css("--surface");
+    el("rect", { x: 0, y: 0, width: PW, height: PH, fill: surface }, svg);
+    zones.forEach(z => {
+      el("rect", { x: px(0), y: py(z.y1), width: W * S, height: (z.y1 - z.y0) * S, fill: css("--z-" + z.id) }, svg);
+    });
+    zones.forEach(z => {
+      const t = el("text", { x: px(W) - 6, y: py(z.y1) + 13, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".04em" }, svg);
+      t.textContent = z.name.toUpperCase();
+    });
+    items.filter(i => i.room).forEach(i => {
+      const r = i.room;
+      el("rect", { x: px(r.x), y: py(r.y + r.d), width: r.w * S, height: r.d * S, fill: css("--z-boh"), stroke: "none" }, svg);
+    });
+    el("rect", { x: px(0) + 3, y: py(18.5) + 3, width: 2.6 * S - 6, height: 4.0 * S - 6, fill: "none", stroke: muted, "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+    items.forEach(it => {
+      it.parts.forEach(p => {
+        if (p.plan === "none") return;
+        const dashed = it.plan === "dashed";
+        const common = { fill: dashed ? "none" : surface, stroke: dashed ? lapis : ink, "stroke-width": dashed ? 1.2 : 1, "stroke-dasharray": dashed ? "5 4" : "none" };
+        if (p.s === "cyl") el("circle", Object.assign({ cx: px(p.x), cy: py(p.y), r: p.r * S }, common), svg);
+        else el("rect", Object.assign({ x: px(p.x), y: py(p.y + p.d), width: p.w * S, height: p.d * S, rx: 1.5 }, common), svg);
+        if (p.s === "rack") for (let k = 1; k < 4; k++) el("line", { x1: px(p.x), x2: px(p.x + p.w), y1: py(p.y + p.d * k / 4), y2: py(p.y + p.d * k / 4), stroke: muted, "stroke-width": .7 }, svg);
+      });
+    });
+    partitions.forEach(([x1, y1, x2, y2]) => el("line", { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: wall, "stroke-width": 3, "stroke-linecap": "square" }, svg));
+    columns.forEach(c => el("circle", { cx: px(c.x), cy: py(c.y), r: 4.5, fill: wall }, svg));
+    const T = 7;
+    const seg = (x1, y1, x2, y2) => el("line", { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: wall, "stroke-width": T, "stroke-linecap": "square" }, svg);
+    seg(0, 0, 0, D); seg(W, 0, W, D);
+    const fr = doors.find(d => d.wall === "front"), re = doors.find(d => d.wall === "rear");
+    seg(0, 0, fr.a, 0); seg(fr.b, 0, W, 0);
+    seg(0, D, re.a, D); seg(re.b, D, W, D);
+    const swing = (hx, hy, len, dir) => {
+      const r = len * S, x0 = px(hx), y0 = py(hy);
+      el("line", { x1: x0, y1: y0, x2: x0, y2: y0 - dir * r, stroke: ink, "stroke-width": 1 }, svg);
+      el("path", { d: `M ${x0 + r} ${y0} A ${r} ${r} 0 0 ${dir > 0 ? 0 : 1} ${x0} ${y0 - dir * r}`, fill: "none", stroke: muted, "stroke-width": .8, "stroke-dasharray": "2 2" }, svg);
+    };
+    swing(fr.a, 0, fr.b - fr.a, 1);
+    swing(re.a, D, re.b - re.a, -1);
+    items.forEach(it => {
+      const p = it.parts[0];
+      let cx = p.s === "cyl" ? p.x : p.x + p.w / 2, cy = p.s === "cyl" ? p.y : p.y + p.d / 2;
+      if (it.room) { cx = it.room.x + it.room.w / 2; cy = it.room.y + it.room.d / 2; if (it.n === 16) { cx = 1.3; cy = 17.3; } if (it.n === 18) { cx = 5.3; cy = 15.5; } if (it.n === 19) { cx = 5.2; cy = 17.0; } }
+      if (it.n === 11) { cx = 5.9; cy = 8.95; }
+      el("circle", { cx: px(cx), cy: py(cy), r: 8, fill: lapis }, svg);
+      const t = el("text", { x: px(cx), y: py(cy) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: surface }, svg);
+      t.textContent = it.n;
+    });
+    flowGroup = el("g", { id: "flow" }, svg);
+    const defs = el("defs", {}, svg);
+    const mk = el("marker", { id: "arr", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto-start-reverse" }, defs);
+    el("path", { d: "M0,0 L10,5 L0,10 z", fill: saffron }, mk);
+    el("polyline", { points: flow.map(f => `${px(f.x)},${py(f.y)}`).join(" "), fill: "none", stroke: saffron, "stroke-width": 2.2, "stroke-dasharray": "6 4", "marker-end": "url(#arr)", "stroke-linejoin": "round" }, flowGroup);
+    flow.filter(f => f.k).forEach(f => {
+      el("rect", { x: px(f.x) - 8, y: py(f.y) - 8, width: 16, height: 16, rx: 3, fill: saffron }, flowGroup);
+      const t = el("text", { x: px(f.x), y: py(f.y) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: "#17202e" }, flowGroup);
+      t.textContent = f.k;
+    });
+    flowGroup.style.display = flowOn ? "" : "none";
+    const st = el("text", { x: px(W / 2), y: py(0) + 24, "text-anchor": "middle", "font-size": 11, "font-weight": 600, fill: ink, "letter-spacing": ".08em" }, svg);
+    st.textContent = "BLACKHALL STREET";
+    const dl = el("text", { x: px(fr.a + (fr.b - fr.a) / 2), y: py(0) + 38, "text-anchor": "middle", "font-size": 8.5, fill: muted }, svg);
+    dl.textContent = "Street door";
+    const rl = el("text", { x: px(re.a + (re.b - re.a) / 2) + 40, y: py(D) - 12, "text-anchor": "middle", "font-size": 8.5, fill: muted }, svg);
+    rl.textContent = "Goods in / fire exit (proposed)";
+    const dimY = py(0) + 52;
+    el("line", { x1: px(0), x2: px(W), y1: dimY, y2: dimY, stroke: muted, "stroke-width": .8 }, svg);
+    [0, W].forEach(x => el("line", { x1: px(x), x2: px(x), y1: dimY - 4, y2: dimY + 4, stroke: muted, "stroke-width": .8 }, svg));
+    const wt = el("text", { x: px(W / 2), y: dimY - 4, "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": "IBM Plex Mono, monospace" }, svg);
+    wt.textContent = "c. 6.5 m";
+    const dx = px(W) + 20;
+    el("line", { x1: dx, x2: dx, y1: py(0), y2: py(D), stroke: muted, "stroke-width": .8 }, svg);
+    [0, D].forEach(y => el("line", { x1: dx - 4, x2: dx + 4, y1: py(y), y2: py(y), stroke: muted, "stroke-width": .8 }, svg));
+    const ht = el("text", { x: dx + 4, y: py(D / 2), "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": "IBM Plex Mono, monospace", transform: `rotate(-90 ${dx + 4} ${py(D / 2)})` }, svg);
+    ht.textContent = "c. 18.5 m";
+    const sx = 6;
+    el("line", { x1: sx + 6, x2: sx + 6, y1: py(0), y2: py(2), stroke: ink, "stroke-width": 2 }, svg);
+    [0, 1, 2].forEach(m => { el("line", { x1: sx + 2, x2: sx + 10, y1: py(m), y2: py(m), stroke: ink, "stroke-width": 1 }, svg); });
+    const sl = el("text", { x: sx + 1, y: py(2) - 6, "font-size": 8, fill: muted, "font-family": "IBM Plex Mono, monospace" }, svg);
+    sl.textContent = "2 m";
+  }
+
+  let flowOn = true;
+  document.getElementById("toggleFlow").addEventListener("click", (e) => {
+    flowOn = !flowOn; e.currentTarget.setAttribute("aria-pressed", String(flowOn));
+    if (flowGroup) flowGroup.style.display = flowOn ? "" : "none";
+  });
+
+  // ---------- Lists ----------
+  const key = document.getElementById("key");
+  items.forEach(it => { const li = document.createElement("li"); li.innerHTML = `<span class="badge">${it.n}</span><span>${it.label}</span>`; key.appendChild(li); });
+  const cli = document.createElement("li"); cli.innerHTML = `<span class="badge" style="background:var(--wall)"></span><span>Existing cast-iron columns (positions approximate)</span>`; key.appendChild(cli);
+  const zEl = document.getElementById("zones");
+  zones.forEach(z => {
+    const area = ((z.y1 - z.y0) * W).toFixed(1);
+    const d = document.createElement("div"); d.className = "zone-row";
+    d.innerHTML = `<span class="swatch" style="background:var(--z-${z.id})"></span><b>${z.name}</b><span class="area">${area} m²</span><p>${z.note}</p>`;
+    zEl.appendChild(d);
+  });
+  const fk = document.getElementById("flowKey");
+  flow.filter(f => f.k).forEach(f => { const li = document.createElement("li"); li.innerHTML = `<span class="badge flow">${f.k}</span><span>${f.label}</span>`; fk.appendChild(li); });
+
+  drawPlan();
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const rerender = () => { drawPlan(); if (window.__retheme) window.__retheme(); };
+  mq.addEventListener && mq.addEventListener("change", rerender);
+  new MutationObserver(rerender).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // ---------- 3D model ----------
+  const host = document.getElementById("model");
+  if (!window.THREE || !THREE.OrbitControls) {
+    const f = document.createElement("div"); f.className = "fail"; f.textContent = "The 3D model could not load in this browser. The floor plan shows the same layout."; host.appendChild(f); return;
+  }
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  host.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.maxPolarAngle = Math.PI / 2 - 0.02; controls.minDistance = 1; controls.maxDistance = 45;
+
+  const X = (x) => x - W / 2, Z = (y) => D / 2 - y;
+  const mats = {
+    wood: new THREE.MeshStandardMaterial({ color: 0xb98a5a, roughness: .7 }),
+    counter: new THREE.MeshStandardMaterial({ color: 0x24497f, roughness: .5 }),
+    steel: new THREE.MeshStandardMaterial({ color: 0xc7ccd3, metalness: .6, roughness: .35 }),
+    white: new THREE.MeshStandardMaterial({ color: 0xf5f5f2, roughness: .4 }),
+    brick: new THREE.MeshStandardMaterial({ color: 0x9c4a2f, roughness: .85 }),
+    clay: new THREE.MeshStandardMaterial({ color: 0xc58a55, roughness: .9 }),
+    canopy: new THREE.MeshStandardMaterial({ color: 0xd9dde3, metalness: .5, roughness: .3, transparent: true, opacity: .55 }),
+    sacks: new THREE.MeshStandardMaterial({ color: 0xe4d6b5, roughness: 1 }),
+    deck: new THREE.MeshStandardMaterial({ color: 0x8e7a62, roughness: .8, transparent: true, opacity: .8 }),
+    locker: new THREE.MeshStandardMaterial({ color: 0x5e7f8f, roughness: .6 }),
+    floor: new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: .55 }),
+    wall: new THREE.MeshStandardMaterial({ color: 0xf2f4f6, roughness: .6 }),
+    part: new THREE.MeshStandardMaterial({ color: 0xe1e6ec, roughness: .6 }),
+    column: new THREE.MeshStandardMaterial({ color: 0x23366a, roughness: .5 }),
+    door: new THREE.MeshStandardMaterial({ color: 0x3a3f47, roughness: .5 })
+  };
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; scene.add(m); return m; };
+  const box = (x, y, w, d, h, mat, z0 = 0) => add(new THREE.BoxGeometry(w, h, d), mat, X(x + w / 2), z0 + h / 2, Z(y + d / 2));
+
+  const floor = add(new THREE.BoxGeometry(W, 0.1, D), mats.floor, 0, -0.05, 0);
+  floor.castShadow = false;
+  const WH = 3.2, LOW = 1.0, TH = 0.3;
+  add(new THREE.BoxGeometry(TH, WH, D + TH * 2), mats.wall, X(-TH / 2), WH / 2, 0);
+  add(new THREE.BoxGeometry(TH, LOW, D + TH * 2), mats.wall, X(W + TH / 2), LOW / 2, 0);
+  const re = doors.find(d => d.wall === "rear"), fr = doors.find(d => d.wall === "front");
+  [[0, re.a], [re.b, W]].forEach(([a, b]) => add(new THREE.BoxGeometry(b - a, WH, TH), mats.wall, X((a + b) / 2), WH / 2, Z(D + TH / 2)));
+  add(new THREE.BoxGeometry(re.b - re.a, WH - 2.1, TH), mats.wall, X((re.a + re.b) / 2), 2.1 + (WH - 2.1) / 2, Z(D + TH / 2));
+  add(new THREE.BoxGeometry(re.b - re.a, 2.1, 0.06), mats.door, X((re.a + re.b) / 2), 1.05, Z(D + 0.03));
+  [[0, fr.a], [fr.b, W]].forEach(([a, b]) => add(new THREE.BoxGeometry(b - a, LOW, TH), mats.wall, X((a + b) / 2), LOW / 2, Z(-TH / 2)));
+  partitions.forEach(([x1, y1, x2, y2]) => {
+    const len = Math.hypot(x2 - x1, y2 - y1), h = 2.4, t = 0.1;
+    const g = x1 === x2 ? new THREE.BoxGeometry(t, h, len) : new THREE.BoxGeometry(len, h, t);
+    add(g, mats.part, X((x1 + x2) / 2), h / 2, Z((y1 + y2) / 2));
+  });
+  columns.forEach(c => add(new THREE.CylinderGeometry(0.12, 0.12, 3.2, 20), mats.column, X(c.x), 1.6, Z(c.y)));
+  const labelAnchors = [];
+  items.forEach(it => {
+    it.parts.forEach(p => {
+      if (p.s === "box") {
+        box(p.x, p.y, p.w, p.d, p.h, mats[p.m], p.z || 0);
+        if (p.m === "brick") add(new THREE.BoxGeometry(1.0, 0.35, 0.05), mats.door, X(p.x + p.w / 2), 0.85, Z(p.y - 0.01));
+        if (p.m === "steel" && it.n === 8) { for (let k = 0; k < 3; k++) add(new THREE.BoxGeometry(p.w * 0.85, 0.06, 0.04), mats.door, X(p.x + p.w / 2), 0.45 + k * 0.45, Z(p.y - 0.01)); }
+      } else if (p.s === "cyl") {
+        add(new THREE.CylinderGeometry(p.r, p.r * (p.m === "clay" ? 1.1 : 1), p.h, 28), mats[p.m], X(p.x), p.h / 2, Z(p.y));
+      } else if (p.s === "rack") {
+        for (let k = 0; k < 6; k++) box(p.x, p.y, p.w, p.d, 0.03, mats.steel, 0.2 + k * 0.3);
+        [[0, 0], [p.w, 0], [0, p.d], [p.w, p.d]].forEach(([dx, dy]) => box(p.x + dx - 0.02, p.y + dy - 0.02, 0.04, 0.04, p.h, mats.steel));
+      }
+    });
+    const p = it.parts[0];
+    let ax = p.s === "cyl" ? p.x : p.x + p.w / 2, ay = p.s === "cyl" ? p.y : p.y + p.d / 2, ah = (p.z || 0) + p.h + 0.35;
+    if (it.room) { ax = it.room.x + it.room.w / 2; ay = it.room.y + it.room.d / 2; ah = 2.6; }
+    if (it.n === 16) ah = 3.1;
+    labelAnchors.push({ n: it.n, x: ax, y: ay, h: ah });
+  });
+  box(0.35, 1.95, 4.1, 0.7, 0.04, mats.wood, 1.05);
+
+  const labelGroup = new THREE.Group(); scene.add(labelGroup);
+  function makeSprites() {
+    while (labelGroup.children.length) labelGroup.remove(labelGroup.children[0]);
+    const fill = css("--lapis"), txt = css("--surface");
+    labelAnchors.forEach(a => {
+      const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+      g.fillStyle = fill; g.beginPath(); g.arc(32, 32, 28, 0, Math.PI * 2); g.fill();
+      g.fillStyle = txt; g.font = "700 28px Inter, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(a.n), 32, 34);
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
+      s.scale.set(0.42, 0.42, 1); s.position.set(X(a.x), a.h, Z(a.y)); s.renderOrder = 10; labelGroup.add(s);
+    });
+  }
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f96, .75));
+  const sun = new THREE.DirectionalLight(0xffffff, .65); sun.position.set(8, 16, 10); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 50 });
+  scene.add(sun);
+  scene.add(new THREE.AmbientLight(0xffffff, .2));
+
+  function theme() { scene.background = new THREE.Color(css("--bg")); makeSprites(); }
+  window.__retheme = theme; theme();
+
+  const views = {
+    corner: { p: [11, 10, 14], t: [0, 0.6, 0] },
+    front: { p: [0, 4.5, 17], t: [0, 0.8, 0] },
+    top: { p: [0.01, 30, 0.5], t: [0, 0, 0] },
+    counter: { p: [X(1.2), 1.65, Z(0.6)], t: [X(3.2), 1.2, Z(6)] }
+  };
+  function setView(k) {
+    const v = views[k]; camera.position.set(...v.p); controls.target.set(...v.t); controls.update();
+    document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === k)));
+  }
+  document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+  const lb = document.getElementById("toggleLabels");
+  lb.addEventListener("click", () => { labelGroup.visible = !labelGroup.visible; lb.setAttribute("aria-pressed", String(labelGroup.visible)); });
+
+  function resize() {
+    const w = host.clientWidth, h = host.clientHeight; if (!w || !h) return;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(host); resize();
+  setView("corner");
+  (function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+})();
+</script>
+
+</body>
+</html>
