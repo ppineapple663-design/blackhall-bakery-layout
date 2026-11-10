@@ -218,10 +218,6 @@ svg text { font-family: var(--f-body); }
     zones.forEach(z => {
       el("rect", { x: px(0), y: py(z.y1), width: W * S, height: (z.y1 - z.y0) * S, fill: css("--z-" + z.id) }, svg);
     });
-    zones.forEach(z => {
-      const t = el("text", { x: px(W) - 6, y: py(z.y1) + 13, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".04em" }, svg);
-      t.textContent = z.name.toUpperCase();
-    });
     items.filter(i => i.room).forEach(i => {
       const r = i.room;
       el("rect", { x: px(r.x), y: py(r.y + r.d), width: r.w * S, height: r.d * S, fill: css("--z-boh"), stroke: "none" }, svg);
@@ -260,6 +256,10 @@ svg text { font-family: var(--f-body); }
       el("circle", { cx: px(cx), cy: py(cy), r: 8, fill: lapis }, svg);
       const t = el("text", { x: px(cx), y: py(cy) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: surface }, svg);
       t.textContent = it.n;
+    });
+    zones.forEach(z => {
+      const t = el("text", { x: px(W) - 6, y: py(z.y1) + 13, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".04em", stroke: css("--z-" + z.id), "stroke-width": 4, "paint-order": "stroke", "stroke-linejoin": "round" }, svg);
+      t.textContent = z.name.toUpperCase();
     });
     flowGroup = el("g", { id: "flow" }, svg);
     const defs = el("defs", {}, svg);
