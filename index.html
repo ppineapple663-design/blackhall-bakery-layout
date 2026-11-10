@@ -12,7 +12,7 @@
 /* Layout: a two-panel drawing sheet, scaled plan beside a 3D model, with the schedule below. */
 :root {
   --bg: #f4f6f9; --surface: #ffffff; --ink: #17202e; --muted: #5a6575; --line: #d7dde6;
-  --lapis: #1f4e8c; --saffron: #c9861c; --wall: #2b3442;
+  --lapis: #1f4e8c; --saffron: #c9861c; --wall: #2b3442; --door: #1f8a5b;
   --z-front: #e5edf8; --z-pack: #e9f1e4; --z-bake: #f8eadb; --z-prep: #efe8f6; --z-boh: #e9ebee;
   --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -20,12 +20,12 @@
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0e131a; --surface: #151c26; --ink: #e5eaf1; --muted: #9ba7b6; --line: #2a3442;
-  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de;
+  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de; --door: #4cc58c;
   --z-front: #1a2535; --z-pack: #1b2820; --z-bake: #2c2218; --z-prep: #241f31; --z-boh: #20252c;
   color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #0e131a; --surface: #151c26; --ink: #e5eaf1; --muted: #9ba7b6; --line: #2a3442;
-  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de;
+  --lapis: #82a9e4; --saffron: #e6ad55; --wall: #c9d2de; --door: #4cc58c;
   --z-front: #1a2535; --z-pack: #1b2820; --z-bake: #2c2218; --z-prep: #241f31; --z-boh: #20252c;
   color-scheme: dark }
 body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
@@ -40,14 +40,14 @@ p { margin: 0; }
 .lead { color: var(--muted); font-size: 16px; }
 .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .fact { font-family: var(--f-mono); font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--ink); background: var(--surface); }
-.sheets { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (max-width: 860px) { .sheets { grid-template-columns: minmax(0, 1fr); } }
+.sheets { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .sheets { grid-template-columns: minmax(0, 1fr); } }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
 .panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
 .sub { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .plan-box { overflow-x: auto; }
-#plan { display: block; width: 100%; max-width: 380px; height: auto; margin: 0 auto; }
-#model { position: relative; width: 100%; aspect-ratio: 4 / 3.4; max-width: 100%; border-radius: 8px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); }
+#plan { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; }
+#model { position: relative; width: 100%; aspect-ratio: 4 / 3.2; max-width: 100%; border-radius: 8px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); }
 #model canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 #model .hint { position: absolute; left: 10px; bottom: 8px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); pointer-events: none; }
 #model .fail { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; text-align: center; color: var(--muted); }
@@ -79,12 +79,13 @@ svg text { font-family: var(--f-body); }
   <header>
     <div class="eyebrow">Unit 4, 11-15 Blackhall Street, Paisley PA1 1TD</div>
     <h1>Persian bakery: proposed layout</h1>
-    <p class="lead">A production bakery for sangak, barbari, taftoon and lavash, trading by delivery and collection only. There is a small pick-up counter with a minimal display, and no eating on site.</p>
+    <p class="lead">A production bakery for sangak, barbari, taftoon and lavash, trading by delivery and collection only. Customers and riders come in through the shared yard to a small pick-up counter just inside the entrance. There's a minimal display and no eating on site.</p>
     <div class="facts">
-      <span class="fact">c. 6.5 m × 18.5 m</span>
+      <span class="fact">c. 9.1 m × 13.2 m</span>
       <span class="fact">c. 120 m²</span>
+      <span class="fact">Entrance off the shared yard</span>
       <span class="fact">Delivery &amp; collection only</span>
-      <span class="fact">Indicative, from site photos</span>
+      <span class="fact">Indicative</span>
     </div>
   </header>
 
@@ -92,22 +93,22 @@ svg text { font-family: var(--f-body); }
     <div class="panel">
       <div class="panel-head">
         <h2>Floor plan</h2>
-        <span class="sub">Scale bar in metres</span>
+        <span class="sub">Plan north up</span>
       </div>
       <div class="controls">
         <button id="toggleFlow" type="button" aria-pressed="true">Show workflow</button>
       </div>
-      <div class="plan-box"><svg id="plan" role="img" aria-label="Floor plan of the proposed bakery layout"></svg></div>
+      <div class="plan-box"><svg id="plan" role="img" aria-label="Floor plan of the proposed bakery layout in Unit 4"></svg></div>
     </div>
 
     <div class="panel">
       <div class="panel-head">
         <h2>3D model</h2>
-        <span class="sub">Front and right-hand walls cut away</span>
+        <span class="sub">Entrance and south walls cut away</span>
       </div>
       <div class="controls">
         <button type="button" data-view="corner" aria-pressed="true">Corner view</button>
-        <button type="button" data-view="front">From the street</button>
+        <button type="button" data-view="yard">From the yard</button>
         <button type="button" data-view="top">From above</button>
         <button type="button" data-view="counter">At the counter</button>
         <button type="button" id="toggleLabels" aria-pressed="true">Numbers</button>
@@ -132,11 +133,11 @@ svg text { font-family: var(--f-body); }
   <section class="notes" aria-label="Notes">
     <h2 style="color:var(--ink)">Notes</h2>
     <ul>
-      <li>Drawn from six site photographs on 10 November 2026. Dimensions, the cast-iron column positions and the door positions are approximate, and need confirming by a measured survey.</li>
-      <li>Fit-out finishes shown: hygienic white wall cladding, a resin floor and a suspended ceiling (left off the model so the inside is visible).</li>
-      <li>The sangak oven, deck oven and tanoor sit under one extraction canopy, with a gas interlock, ducted through the roof.</li>
-      <li>The rear door is proposed for flour deliveries and as a fire exit, subject to a building warrant. Staff WC is reached through a lobby, with no door opening directly into a food room.</li>
-      <li>Subject to building warrant, planning (use class) and environmental health registration with Renfrewshire Council.</li>
+      <li>Drawn from the site plan (October 2022) and six site photographs taken on 10 November 2026. The unit's shape and entrance position follow the site plan. Dimensions and the cast-iron column positions are approximate and need confirming by a measured survey.</li>
+      <li>The only entrance is on the east side, off the shared yard, so customers, riders and flour deliveries all use it. Deliveries are timed outside collection hours.</li>
+      <li>No second exit is shown. Building control will confirm whether one is needed, based on travel distance to the entrance.</li>
+      <li>Fit-out finishes: hygienic white wall cladding, a resin floor and a suspended ceiling (left off the model so the inside is visible). The sangak oven, deck oven and tanoor sit under one extraction canopy with a gas interlock.</li>
+      <li>Staff WC is reached through a lobby, with no door opening directly into a food room. Subject to building warrant, planning (use class) and environmental health registration with Renfrewshire Council.</li>
     </ul>
   </section>
 </div>
@@ -145,157 +146,141 @@ svg text { font-family: var(--f-body); }
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (function () {
-  const W = 6.5, D = 18.5;
+  // x = west to east, y = south to north (metres). Entrance on the east wall at the south end.
+  const W = 9.1, D = 13.2;
 
   const zones = [
-    { id: "front", name: "Collection & rider waiting", y0: 0, y1: 2.0, note: "Street door, bench for customers and delivery riders, no seating for eating." },
-    { id: "pack", name: "Counter, cooling & packing", y0: 2.0, y1: 5.0, note: "Collection counter with a small bread shelf behind, cooling racks and a packing bench for delivery orders." },
-    { id: "bake", name: "Bake", y0: 5.0, y1: 10.5, note: "Sangak pebble-bed oven, deck oven and tanoor under one canopy; shaping and peel bench in front." },
-    { id: "prep", name: "Dough & proving", y0: 10.5, y1: 14.5, note: "Two spiral mixers, dividing bench, prover and ingredients fridge." },
-    { id: "boh", name: "Stores, wash-up & staff", y0: 14.5, y1: 18.5, note: "Flour store off the rear goods door, pot-wash sink, staff lobby with lockers and WC." }
+    { id: "front", name: "Collection & rider waiting", short: "COLLECTION", x0: 6.3, x1: W, y0: 0, y1: 3.0, note: "Just inside the entrance: a bench for customers and riders, and the collection counter. No seating for eating." },
+    { id: "pack", name: "Cooling & packing", short: "COOL & PACK", x0: 0, x1: 6.3, y0: 0, y1: 3.0, note: "Behind the counter: cooling racks, a packing bench for delivery orders and one small bread shelf." },
+    { id: "bake", name: "Bake", short: "BAKE", x0: 0, x1: W, y0: 3.0, y1: 7.4, note: "Sangak pebble-bed oven, deck oven and tanoor in a row under one canopy, with a shaping and peel bench in front." },
+    { id: "prep", name: "Dough & proving", short: "DOUGH & PROVING", x0: 0, x1: W, y0: 7.4, y1: 10.2, note: "Two spiral mixers, a dividing bench, a prover cabinet and an ingredients fridge." },
+    { id: "boh", name: "Stores, wash-up & staff", short: "STORES & STAFF", x0: 0, x1: W, y0: 10.2, y1: D, note: "Flour and dry store, pot-wash sink, and a staff lobby with lockers leading to the WC." }
   ];
 
-  // x across the unit (0 = left wall looking in from the street), y = depth from the street (m)
   const items = [
-    { n: 1, label: "Customer and rider bench", parts: [{ s: "box", x: 0.15, y: 0.5, w: 0.45, d: 1.4, h: 0.45, m: "wood" }] },
-    { n: 2, label: "Collection counter", parts: [{ s: "box", x: 0.4, y: 2.0, w: 4.0, d: 0.6, h: 1.05, m: "counter" }] },
-    { n: 3, label: "Bread shelf (minimal display)", parts: [{ s: "box", x: 0.15, y: 2.9, w: 1.4, d: 0.45, h: 1.7, m: "wood" }] },
-    { n: 4, label: "Packing bench and bag station", parts: [{ s: "box", x: 5.75, y: 2.8, w: 0.65, d: 2.0, h: 0.9, m: "steel" }] },
-    { n: 5, label: "Cooling racks (2)", parts: [{ s: "rack", x: 2.3, y: 3.3, w: 0.6, d: 0.9, h: 1.8 }, { s: "rack", x: 3.2, y: 3.3, w: 0.6, d: 0.9, h: 1.8 }] },
-    { n: 6, label: "Wash-hand basins (3)", parts: [{ s: "box", x: 0.15, y: 4.3, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 0.15, y: 9.7, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 5.95, y: 13.6, w: 0.45, d: 0.5, h: 0.9, m: "white" }] },
-    { n: 7, label: "Sangak oven (pebble bed)", parts: [{ s: "box", x: 1.4, y: 5.8, w: 2.2, d: 2.2, h: 1.4, m: "brick" }] },
-    { n: 8, label: "Deck oven, 3 decks (barbari, taftoon)", parts: [{ s: "box", x: 4.3, y: 5.8, w: 1.9, d: 1.3, h: 1.7, m: "steel" }] },
-    { n: 9, label: "Tanoor (clay oven)", parts: [{ s: "cyl", x: 5.2, y: 8.5, r: 0.55, h: 1.0, m: "clay" }] },
-    { n: 10, label: "Shaping and peel bench", parts: [{ s: "box", x: 1.8, y: 8.7, w: 2.4, d: 0.8, h: 0.9, m: "steel" }] },
-    { n: 11, label: "Extraction canopy over ovens", plan: "dashed", parts: [{ s: "box", x: 1.2, y: 5.4, w: 5.2, d: 3.7, h: 0.45, z: 2.45, m: "canopy" }] },
-    { n: 12, label: "Spiral mixers (2)", parts: [{ s: "cyl", x: 5.8, y: 11.3, r: 0.38, h: 1.15, m: "steel" }, { s: "cyl", x: 5.8, y: 12.3, r: 0.38, h: 1.15, m: "steel" }] },
-    { n: 13, label: "Dough dividing bench", parts: [{ s: "box", x: 2.0, y: 11.0, w: 2.6, d: 1.0, h: 0.9, m: "steel" }] },
-    { n: 14, label: "Prover cabinet", parts: [{ s: "box", x: 0.15, y: 13.0, w: 0.8, d: 0.9, h: 2.0, m: "steel" }] },
-    { n: 15, label: "Ingredients fridge", parts: [{ s: "box", x: 3.0, y: 13.5, w: 0.75, d: 0.75, h: 1.95, m: "steel" }] },
-    { n: 16, label: "Flour and dry store, mezzanine over", room: { x: 0, y: 14.5, w: 2.6, d: 4.0 }, parts: [{ s: "box", x: 0.3, y: 15.1, w: 1.6, d: 1.2, h: 0.7, m: "sacks" }, { s: "box", x: 0, y: 14.5, w: 2.6, d: 4.0, h: 0.12, z: 2.6, m: "deck", plan: "none" }] },
-    { n: 17, label: "Pot-wash double sink", parts: [{ s: "box", x: 2.9, y: 17.8, w: 1.5, d: 0.6, h: 0.9, m: "steel" }] },
-    { n: 18, label: "Staff lobby and lockers", room: { x: 4.6, y: 14.8, w: 1.9, d: 1.4 }, parts: [{ s: "box", x: 6.0, y: 14.95, w: 0.4, d: 1.1, h: 1.8, m: "locker" }] },
-    { n: 19, label: "Staff WC", room: { x: 4.6, y: 16.2, w: 1.9, d: 2.3 }, parts: [{ s: "box", x: 5.85, y: 17.7, w: 0.45, d: 0.6, h: 0.45, m: "white" }] }
+    { n: 1, label: "Customer and rider bench", parts: [{ s: "box", x: 6.6, y: 2.45, w: 1.6, d: 0.45, h: 0.45, m: "wood" }] },
+    { n: 2, label: "Collection counter, with a staff flap at the north end", parts: [{ s: "box", x: 5.7, y: 0.15, w: 0.6, d: 2.25, h: 1.05, m: "counter" }] },
+    { n: 3, label: "Bread shelf (minimal display)", parts: [{ s: "box", x: 4.2, y: 0.15, w: 1.3, d: 0.45, h: 1.7, m: "wood" }] },
+    { n: 4, label: "Packing bench and bag station", parts: [{ s: "box", x: 2.0, y: 0.15, w: 2.0, d: 0.7, h: 0.9, m: "steel" }] },
+    { n: 5, label: "Cooling racks (2)", parts: [{ s: "rack", x: 0.3, y: 1.5, w: 0.9, d: 0.6, h: 1.8 }, { s: "rack", x: 1.4, y: 1.5, w: 0.9, d: 0.6, h: 1.8 }] },
+    { n: 6, label: "Wash-hand basins (3)", parts: [{ s: "box", x: 0.15, y: 2.6, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 8.5, y: 6.6, w: 0.45, d: 0.5, h: 0.9, m: "white" }, { s: "box", x: 0.15, y: 9.4, w: 0.45, d: 0.5, h: 0.9, m: "white" }] },
+    { n: 7, label: "Sangak oven (pebble bed)", parts: [{ s: "box", x: 1.0, y: 4.8, w: 2.2, d: 2.2, h: 1.4, m: "brick" }] },
+    { n: 8, label: "Deck oven, 3 decks (barbari, taftoon)", parts: [{ s: "box", x: 4.0, y: 5.3, w: 1.9, d: 1.3, h: 1.7, m: "steel" }] },
+    { n: 9, label: "Tanoor (clay oven)", parts: [{ s: "cyl", x: 7.3, y: 5.8, r: 0.55, h: 1.0, m: "clay" }] },
+    { n: 10, label: "Shaping and peel bench", parts: [{ s: "box", x: 4.0, y: 3.3, w: 2.8, d: 0.7, h: 0.9, m: "steel" }] },
+    { n: 11, label: "Extraction canopy over the ovens", plan: "dashed", badge: { x: 8.25, y: 4.85 }, parts: [{ s: "box", x: 0.7, y: 4.5, w: 7.9, d: 2.7, h: 0.45, z: 2.45, m: "canopy" }] },
+    { n: 12, label: "Spiral mixers (2)", parts: [{ s: "cyl", x: 8.5, y: 8.2, r: 0.38, h: 1.15, m: "steel" }, { s: "cyl", x: 8.5, y: 9.2, r: 0.38, h: 1.15, m: "steel" }] },
+    { n: 13, label: "Dough dividing bench", parts: [{ s: "box", x: 3.5, y: 8.2, w: 2.8, d: 1.0, h: 0.9, m: "steel" }] },
+    { n: 14, label: "Prover cabinet", parts: [{ s: "box", x: 0.15, y: 7.9, w: 0.8, d: 0.9, h: 2.0, m: "steel" }] },
+    { n: 15, label: "Ingredients fridge", parts: [{ s: "box", x: 7.0, y: 9.3, w: 0.75, d: 0.75, h: 1.95, m: "steel" }] },
+    { n: 16, label: "Flour and dry store, mezzanine over", room: { x: 0, y: 10.2, w: 3.4, d: 3.0 }, badge: { x: 2.6, y: 10.75 }, parts: [{ s: "box", x: 0.3, y: 11.6, w: 1.6, d: 1.2, h: 0.7, m: "sacks" }, { s: "box", x: 0, y: 10.2, w: 3.4, d: 3.0, h: 0.12, z: 2.6, m: "deck", plan: "none" }] },
+    { n: 17, label: "Pot-wash double sink", parts: [{ s: "box", x: 4.0, y: 12.45, w: 1.5, d: 0.6, h: 0.9, m: "steel" }] },
+    { n: 18, label: "Staff lobby and lockers", room: { x: 6.6, y: 10.2, w: 2.5, d: 1.3 }, badge: { x: 7.9, y: 10.85 }, parts: [{ s: "box", x: 6.75, y: 10.3, w: 0.4, d: 1.1, h: 1.8, m: "locker" }] },
+    { n: 19, label: "Staff WC", room: { x: 6.6, y: 11.5, w: 2.5, d: 1.7 }, badge: { x: 7.6, y: 12.35 }, parts: [{ s: "box", x: 8.5, y: 12.45, w: 0.45, d: 0.6, h: 0.45, m: "white" }] }
   ];
-  const columns = [{ x: 0.9, y: 6.9 }, { x: 0.9, y: 12.6 }];
+  const columns = [{ x: 3.2, y: 7.4 }, { x: 6.9, y: 7.4 }];
   const partitions = [
-    [2.6, 14.5, 2.6, 15.6], [2.6, 16.5, 2.6, 18.5], [0, 14.5, 2.6, 14.5],
-    [4.6, 14.8, 4.6, 18.5], [4.6, 14.8, 4.8, 14.8], [5.6, 14.8, 6.5, 14.8],
-    [4.6, 16.2, 5.6, 16.2], [6.3, 16.2, 6.5, 16.2]
+    [6.3, 3.0, W, 3.0],
+    [3.4, 10.2, 3.4, 11.2], [3.4, 12.1, 3.4, D], [0, 10.2, 3.4, 10.2],
+    [6.6, 10.2, 6.6, D], [6.6, 10.2, 6.8, 10.2], [7.6, 10.2, W, 10.2],
+    [6.6, 11.5, 8.2, 11.5], [8.9, 11.5, W, 11.5]
   ];
-  // outer wall door openings: [wall, from, to]
-  const doors = [
-    { wall: "front", a: 4.6, b: 5.8, label: "Street door" },
-    { wall: "rear", a: 0.8, b: 1.8, label: "Goods in / fire exit (proposed)" }
-  ];
+  const door = { a: 0.5, b: 1.7 }; // on the east wall
   const flow = [
-    { k: "A", label: "Flour delivered to the dry store", x: 1.3, y: 16.4 },
-    { x: 3.6, y: 16.05 },
-    { k: "B", label: "Mix, divide and prove", x: 3.6, y: 12.5 },
-    { k: "C", label: "Shape and load the peel", x: 3.0, y: 9.1 },
-    { k: "D", label: "Bake: sangak, deck oven or tanoor", x: 2.5, y: 7.2 },
-    { k: "E", label: "Cool on the racks", x: 2.8, y: 3.75 },
-    { k: "F", label: "Pack delivery orders", x: 5.1, y: 3.8 },
-    { k: "G", label: "Hand over at the counter or to the rider", x: 5.2, y: 1.0 }
+    { k: "A", label: "Flour from the dry store", x: 1.7, y: 12.0 },
+    { x: 3.4, y: 11.65 }, { x: 5.0, y: 11.0 },
+    { k: "B", label: "Mix, divide and prove", x: 5.0, y: 9.7 },
+    { x: 6.6, y: 7.9 },
+    { k: "C", label: "Shape and load the peel", x: 5.4, y: 3.65 },
+    { k: "D", label: "Bake: sangak, deck oven or tanoor", x: 2.1, y: 4.25 },
+    { k: "E", label: "Cool on the racks", x: 1.3, y: 2.4 },
+    { k: "F", label: "Pack delivery orders", x: 3.0, y: 1.15 },
+    { k: "G", label: "Hand over at the counter", x: 6.0, y: 1.25 },
+    { x: 8.4, y: 1.1 }
   ];
 
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const NS = "http://www.w3.org/2000/svg";
   const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const txt = (parent, attrs, s) => { const t = el("text", attrs, parent); t.textContent = s; return t; };
+  const badgeAt = (it) => {
+    if (it.badge) return it.badge;
+    if (it.room) return { x: it.room.x + it.room.w / 2, y: it.room.y + it.room.d / 2 };
+    const p = it.parts[0];
+    return p.s === "cyl" ? { x: p.x, y: p.y } : { x: p.x + p.w / 2, y: p.y + p.d / 2 };
+  };
 
   // ---------- Floor plan ----------
-  const S = 34, ML = 34, MR = 34, MT = 34, MB = 70;
+  const S = 34, ML = 46, MR = 52, MT = 40, MB = 76;
   const PW = ML + W * S + MR, PH = MT + D * S + MB;
   const px = (x) => ML + x * S, py = (y) => MT + (D - y) * S;
   const svg = document.getElementById("plan");
   svg.setAttribute("viewBox", `0 0 ${PW} ${PH}`);
-  let flowGroup;
+  let flowGroup, flowOn = true;
 
   function drawPlan() {
     svg.innerHTML = "";
-    const ink = css("--ink"), muted = css("--muted"), wall = css("--wall"), lapis = css("--lapis"), saffron = css("--saffron"), surface = css("--surface");
+    const ink = css("--ink"), muted = css("--muted"), wall = css("--wall"), lapis = css("--lapis"), saffron = css("--saffron"), surface = css("--surface"), green = css("--door");
+    const mono = "IBM Plex Mono, monospace";
     el("rect", { x: 0, y: 0, width: PW, height: PH, fill: surface }, svg);
-    zones.forEach(z => {
-      el("rect", { x: px(0), y: py(z.y1), width: W * S, height: (z.y1 - z.y0) * S, fill: css("--z-" + z.id) }, svg);
-    });
-    items.filter(i => i.room).forEach(i => {
-      const r = i.room;
-      el("rect", { x: px(r.x), y: py(r.y + r.d), width: r.w * S, height: r.d * S, fill: css("--z-boh"), stroke: "none" }, svg);
-    });
-    el("rect", { x: px(0) + 3, y: py(18.5) + 3, width: 2.6 * S - 6, height: 4.0 * S - 6, fill: "none", stroke: muted, "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
-    items.forEach(it => {
-      it.parts.forEach(p => {
-        if (p.plan === "none") return;
-        const dashed = it.plan === "dashed";
-        const common = { fill: dashed ? "none" : surface, stroke: dashed ? lapis : ink, "stroke-width": dashed ? 1.2 : 1, "stroke-dasharray": dashed ? "5 4" : "none" };
-        if (p.s === "cyl") el("circle", Object.assign({ cx: px(p.x), cy: py(p.y), r: p.r * S }, common), svg);
-        else el("rect", Object.assign({ x: px(p.x), y: py(p.y + p.d), width: p.w * S, height: p.d * S, rx: 1.5 }, common), svg);
-        if (p.s === "rack") for (let k = 1; k < 4; k++) el("line", { x1: px(p.x), x2: px(p.x + p.w), y1: py(p.y + p.d * k / 4), y2: py(p.y + p.d * k / 4), stroke: muted, "stroke-width": .7 }, svg);
-      });
-    });
+    zones.forEach(z => el("rect", { x: px(z.x0), y: py(z.y1), width: (z.x1 - z.x0) * S, height: (z.y1 - z.y0) * S, fill: css("--z-" + z.id) }, svg));
+    el("rect", { x: px(0) + 3, y: py(D) + 3, width: 3.4 * S - 6, height: 3.0 * S - 6, fill: "none", stroke: muted, "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+    items.forEach(it => it.parts.forEach(p => {
+      if (p.plan === "none") return;
+      const dashed = it.plan === "dashed";
+      const common = { fill: dashed ? "none" : surface, stroke: dashed ? lapis : ink, "stroke-width": dashed ? 1.2 : 1, "stroke-dasharray": dashed ? "5 4" : "none" };
+      if (p.s === "cyl") el("circle", Object.assign({ cx: px(p.x), cy: py(p.y), r: p.r * S }, common), svg);
+      else el("rect", Object.assign({ x: px(p.x), y: py(p.y + p.d), width: p.w * S, height: p.d * S, rx: 1.5 }, common), svg);
+      if (p.s === "rack") for (let k = 1; k < 4; k++) el("line", { x1: px(p.x + p.w * k / 4), x2: px(p.x + p.w * k / 4), y1: py(p.y), y2: py(p.y + p.d), stroke: muted, "stroke-width": .7 }, svg);
+    }));
     partitions.forEach(([x1, y1, x2, y2]) => el("line", { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: wall, "stroke-width": 3, "stroke-linecap": "square" }, svg));
     columns.forEach(c => el("circle", { cx: px(c.x), cy: py(c.y), r: 4.5, fill: wall }, svg));
-    const T = 7;
-    const seg = (x1, y1, x2, y2) => el("line", { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: wall, "stroke-width": T, "stroke-linecap": "square" }, svg);
-    seg(0, 0, 0, D); seg(W, 0, W, D);
-    const fr = doors.find(d => d.wall === "front"), re = doors.find(d => d.wall === "rear");
-    seg(0, 0, fr.a, 0); seg(fr.b, 0, W, 0);
-    seg(0, D, re.a, D); seg(re.b, D, W, D);
-    const swing = (hx, hy, len, dir) => {
-      const r = len * S, x0 = px(hx), y0 = py(hy);
-      el("line", { x1: x0, y1: y0, x2: x0, y2: y0 - dir * r, stroke: ink, "stroke-width": 1 }, svg);
-      el("path", { d: `M ${x0 + r} ${y0} A ${r} ${r} 0 0 ${dir > 0 ? 0 : 1} ${x0} ${y0 - dir * r}`, fill: "none", stroke: muted, "stroke-width": .8, "stroke-dasharray": "2 2" }, svg);
-    };
-    swing(fr.a, 0, fr.b - fr.a, 1);
-    swing(re.a, D, re.b - re.a, -1);
-    items.forEach(it => {
-      const p = it.parts[0];
-      let cx = p.s === "cyl" ? p.x : p.x + p.w / 2, cy = p.s === "cyl" ? p.y : p.y + p.d / 2;
-      if (it.room) { cx = it.room.x + it.room.w / 2; cy = it.room.y + it.room.d / 2; if (it.n === 16) { cx = 1.3; cy = 17.3; } if (it.n === 18) { cx = 5.3; cy = 15.5; } if (it.n === 19) { cx = 5.2; cy = 17.0; } }
-      if (it.n === 11) { cx = 5.9; cy = 8.95; }
-      el("circle", { cx: px(cx), cy: py(cy), r: 8, fill: lapis }, svg);
-      const t = el("text", { x: px(cx), y: py(cy) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: surface }, svg);
-      t.textContent = it.n;
-    });
-    zones.forEach(z => {
-      const t = el("text", { x: px(W) - 6, y: py(z.y1) + 13, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".04em", stroke: css("--z-" + z.id), "stroke-width": 4, "paint-order": "stroke", "stroke-linejoin": "round" }, svg);
-      t.textContent = z.name.toUpperCase();
-    });
+    // outer walls, gap for the entrance on the east wall
+    const seg = (x1, y1, x2, y2) => el("line", { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: wall, "stroke-width": 7, "stroke-linecap": "square" }, svg);
+    seg(0, 0, W, 0); seg(0, D, W, D); seg(0, 0, 0, D); seg(W, 0, W, door.a); seg(W, door.b, W, D);
+    // entrance: inward swing, highlighted green as on the site plan
+    const r = (door.b - door.a) * S;
+    el("line", { x1: px(W), y1: py(door.a), x2: px(W) - r, y2: py(door.a), stroke: green, "stroke-width": 2 }, svg);
+    el("path", { d: `M ${px(W)} ${py(door.b)} A ${r} ${r} 0 0 0 ${px(W) - r} ${py(door.a)}`, fill: "none", stroke: green, "stroke-width": 1, "stroke-dasharray": "3 2" }, svg);
+    el("circle", { cx: px(W) + 2, cy: py((door.a + door.b) / 2), r: r / 2 + 6, fill: "none", stroke: green, "stroke-width": 2 }, svg);
+    // labels around the unit
+    const ex = px(W) + 30, ey = py((door.a + door.b) / 2);
+    txt(svg, { x: ex, y: ey, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: green, transform: `rotate(-90 ${ex} ${ey})` }, "ENTRANCE");
+    const yx = px(W) + 30, yy = py(D * 0.58);
+    txt(svg, { x: yx, y: yy, "text-anchor": "middle", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".08em", transform: `rotate(-90 ${yx} ${yy})` }, "SHARED YARD  →  BLACKHALL STREET");
+    txt(svg, { x: px(W / 2), y: py(0) + 20, "text-anchor": "middle", "font-size": 9.5, fill: muted, "letter-spacing": ".06em" }, "UNIT 3 (ADJOINING)");
+    // north arrow
+    const nx = px(0) - 24, ny = py(D) + 6;
+    el("path", { d: `M ${nx} ${ny} l -5 12 l 5 -3 l 5 3 z`, fill: ink }, svg);
+    txt(svg, { x: nx, y: ny - 4, "text-anchor": "middle", "font-size": 10, "font-weight": 700, fill: ink }, "N");
+    // zone labels with a halo so they stay readable over equipment
+    zones.forEach(z => txt(svg, { x: px(z.x1) - 6, y: py(z.y1) + 13, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: muted, "letter-spacing": ".04em", stroke: css("--z-" + z.id), "stroke-width": 4, "paint-order": "stroke", "stroke-linejoin": "round" }, z.short));
+    // item badges
+    items.forEach(it => { const b = badgeAt(it); el("circle", { cx: px(b.x), cy: py(b.y), r: 8, fill: lapis }, svg); txt(svg, { x: px(b.x), y: py(b.y) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: surface }, it.n); });
+    // workflow
     flowGroup = el("g", { id: "flow" }, svg);
     const defs = el("defs", {}, svg);
     const mk = el("marker", { id: "arr", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto-start-reverse" }, defs);
     el("path", { d: "M0,0 L10,5 L0,10 z", fill: saffron }, mk);
     el("polyline", { points: flow.map(f => `${px(f.x)},${py(f.y)}`).join(" "), fill: "none", stroke: saffron, "stroke-width": 2.2, "stroke-dasharray": "6 4", "marker-end": "url(#arr)", "stroke-linejoin": "round" }, flowGroup);
-    flow.filter(f => f.k).forEach(f => {
-      el("rect", { x: px(f.x) - 8, y: py(f.y) - 8, width: 16, height: 16, rx: 3, fill: saffron }, flowGroup);
-      const t = el("text", { x: px(f.x), y: py(f.y) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: "#17202e" }, flowGroup);
-      t.textContent = f.k;
-    });
+    flow.filter(f => f.k).forEach(f => { el("rect", { x: px(f.x) - 8, y: py(f.y) - 8, width: 16, height: 16, rx: 3, fill: saffron }, flowGroup); txt(flowGroup, { x: px(f.x), y: py(f.y) + 3.5, "text-anchor": "middle", "font-size": 9.5, "font-weight": 700, fill: "#17202e" }, f.k); });
     flowGroup.style.display = flowOn ? "" : "none";
-    const st = el("text", { x: px(W / 2), y: py(0) + 24, "text-anchor": "middle", "font-size": 11, "font-weight": 600, fill: ink, "letter-spacing": ".08em" }, svg);
-    st.textContent = "BLACKHALL STREET";
-    const dl = el("text", { x: px(fr.a + (fr.b - fr.a) / 2), y: py(0) + 38, "text-anchor": "middle", "font-size": 8.5, fill: muted }, svg);
-    dl.textContent = "Street door";
-    const rl = el("text", { x: px(re.a + (re.b - re.a) / 2) + 40, y: py(D) - 12, "text-anchor": "middle", "font-size": 8.5, fill: muted }, svg);
-    rl.textContent = "Goods in / fire exit (proposed)";
-    const dimY = py(0) + 52;
+    // dimensions: width below, depth on the west side
+    const dimY = py(0) + 38;
     el("line", { x1: px(0), x2: px(W), y1: dimY, y2: dimY, stroke: muted, "stroke-width": .8 }, svg);
     [0, W].forEach(x => el("line", { x1: px(x), x2: px(x), y1: dimY - 4, y2: dimY + 4, stroke: muted, "stroke-width": .8 }, svg));
-    const wt = el("text", { x: px(W / 2), y: dimY - 4, "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": "IBM Plex Mono, monospace" }, svg);
-    wt.textContent = "c. 6.5 m";
-    const dx = px(W) + 20;
-    el("line", { x1: dx, x2: dx, y1: py(0), y2: py(D), stroke: muted, "stroke-width": .8 }, svg);
-    [0, D].forEach(y => el("line", { x1: dx - 4, x2: dx + 4, y1: py(y), y2: py(y), stroke: muted, "stroke-width": .8 }, svg));
-    const ht = el("text", { x: dx + 4, y: py(D / 2), "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": "IBM Plex Mono, monospace", transform: `rotate(-90 ${dx + 4} ${py(D / 2)})` }, svg);
-    ht.textContent = "c. 18.5 m";
-    const sx = 6;
-    el("line", { x1: sx + 6, x2: sx + 6, y1: py(0), y2: py(2), stroke: ink, "stroke-width": 2 }, svg);
-    [0, 1, 2].forEach(m => { el("line", { x1: sx + 2, x2: sx + 10, y1: py(m), y2: py(m), stroke: ink, "stroke-width": 1 }, svg); });
-    const sl = el("text", { x: sx + 1, y: py(2) - 6, "font-size": 8, fill: muted, "font-family": "IBM Plex Mono, monospace" }, svg);
-    sl.textContent = "2 m";
+    txt(svg, { x: px(W / 2), y: dimY - 4, "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": mono }, "c. 9.1 m");
+    const dx = px(0) - 18;
+    el("line", { x1: dx, x2: dx, y1: py(0), y2: py(D - 1.2), stroke: muted, "stroke-width": .8 }, svg);
+    [0].forEach(y => el("line", { x1: dx - 4, x2: dx + 4, y1: py(y), y2: py(y), stroke: muted, "stroke-width": .8 }, svg));
+    txt(svg, { x: dx - 4, y: py(D / 2 - 0.6), "text-anchor": "middle", "font-size": 9, fill: muted, "font-family": mono, transform: `rotate(-90 ${dx - 4} ${py(D / 2 - 0.6)})` }, "c. 13.2 m");
+    // scale bar
+    const sy = py(0) + 60;
+    el("line", { x1: px(0), x2: px(2), y1: sy, y2: sy, stroke: ink, "stroke-width": 2 }, svg);
+    [0, 1, 2].forEach(m => el("line", { x1: px(m), x2: px(m), y1: sy - 4, y2: sy + 4, stroke: ink, "stroke-width": 1 }, svg));
+    txt(svg, { x: px(2) + 6, y: sy + 3, "font-size": 8.5, fill: muted, "font-family": mono }, "2 m");
   }
 
-  let flowOn = true;
   document.getElementById("toggleFlow").addEventListener("click", (e) => {
     flowOn = !flowOn; e.currentTarget.setAttribute("aria-pressed", String(flowOn));
     if (flowGroup) flowGroup.style.display = flowOn ? "" : "none";
@@ -307,7 +292,7 @@ svg text { font-family: var(--f-body); }
   const cli = document.createElement("li"); cli.innerHTML = `<span class="badge" style="background:var(--wall)"></span><span>Existing cast-iron columns (positions approximate)</span>`; key.appendChild(cli);
   const zEl = document.getElementById("zones");
   zones.forEach(z => {
-    const area = ((z.y1 - z.y0) * W).toFixed(1);
+    const area = ((z.x1 - z.x0) * (z.y1 - z.y0)).toFixed(1);
     const d = document.createElement("div"); d.className = "zone-row";
     d.innerHTML = `<span class="swatch" style="background:var(--z-${z.id})"></span><b>${z.name}</b><span class="area">${area} m²</span><p>${z.note}</p>`;
     zEl.appendChild(d);
@@ -316,8 +301,8 @@ svg text { font-family: var(--f-body); }
   flow.filter(f => f.k).forEach(f => { const li = document.createElement("li"); li.innerHTML = `<span class="badge flow">${f.k}</span><span>${f.label}</span>`; fk.appendChild(li); });
 
   drawPlan();
-  const mq = window.matchMedia("(prefers-color-scheme: dark)");
   const rerender = () => { drawPlan(); if (window.__retheme) window.__retheme(); };
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
   mq.addEventListener && mq.addEventListener("change", rerender);
   new MutationObserver(rerender).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
@@ -333,52 +318,44 @@ svg text { font-family: var(--f-body); }
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; controls.maxPolarAngle = Math.PI / 2 - 0.02; controls.minDistance = 1; controls.maxDistance = 45;
+  controls.enableDamping = true; controls.maxPolarAngle = Math.PI / 2 - 0.02; controls.minDistance = 1; controls.maxDistance = 40;
 
-  const X = (x) => x - W / 2, Z = (y) => D / 2 - y;
+  const X = (x) => x - W / 2, Z = (y) => D / 2 - y; // south towards +z, east towards +x
+  const M = (o) => new THREE.MeshStandardMaterial(o);
   const mats = {
-    wood: new THREE.MeshStandardMaterial({ color: 0xb98a5a, roughness: .7 }),
-    counter: new THREE.MeshStandardMaterial({ color: 0x24497f, roughness: .5 }),
-    steel: new THREE.MeshStandardMaterial({ color: 0xc7ccd3, metalness: .6, roughness: .35 }),
-    white: new THREE.MeshStandardMaterial({ color: 0xf5f5f2, roughness: .4 }),
-    brick: new THREE.MeshStandardMaterial({ color: 0x9c4a2f, roughness: .85 }),
-    clay: new THREE.MeshStandardMaterial({ color: 0xc58a55, roughness: .9 }),
-    canopy: new THREE.MeshStandardMaterial({ color: 0xd9dde3, metalness: .5, roughness: .3, transparent: true, opacity: .55 }),
-    sacks: new THREE.MeshStandardMaterial({ color: 0xe4d6b5, roughness: 1 }),
-    deck: new THREE.MeshStandardMaterial({ color: 0x8e7a62, roughness: .8, transparent: true, opacity: .8 }),
-    locker: new THREE.MeshStandardMaterial({ color: 0x5e7f8f, roughness: .6 }),
-    floor: new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: .55 }),
-    wall: new THREE.MeshStandardMaterial({ color: 0xf2f4f6, roughness: .6 }),
-    part: new THREE.MeshStandardMaterial({ color: 0xe1e6ec, roughness: .6 }),
-    column: new THREE.MeshStandardMaterial({ color: 0x23366a, roughness: .5 }),
-    door: new THREE.MeshStandardMaterial({ color: 0x3a3f47, roughness: .5 })
+    wood: M({ color: 0xb98a5a, roughness: .7 }), counter: M({ color: 0x24497f, roughness: .5 }),
+    steel: M({ color: 0xc7ccd3, metalness: .6, roughness: .35 }), white: M({ color: 0xf5f5f2, roughness: .4 }),
+    brick: M({ color: 0x9c4a2f, roughness: .85 }), clay: M({ color: 0xc58a55, roughness: .9 }),
+    canopy: M({ color: 0xd9dde3, metalness: .5, roughness: .3, transparent: true, opacity: .55 }),
+    sacks: M({ color: 0xe4d6b5, roughness: 1 }), deck: M({ color: 0x8e7a62, roughness: .8, transparent: true, opacity: .8 }),
+    locker: M({ color: 0x5e7f8f, roughness: .6 }), floor: M({ color: 0x9aa3ad, roughness: .55 }),
+    wall: M({ color: 0xf2f4f6, roughness: .6 }), part: M({ color: 0xe1e6ec, roughness: .6 }),
+    column: M({ color: 0x23366a, roughness: .5 }), dark: M({ color: 0x3a3f47, roughness: .5 }),
+    door: M({ color: 0x1f8a5b, roughness: .5 })
   };
   const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; scene.add(m); return m; };
   const box = (x, y, w, d, h, mat, z0 = 0) => add(new THREE.BoxGeometry(w, h, d), mat, X(x + w / 2), z0 + h / 2, Z(y + d / 2));
 
-  const floor = add(new THREE.BoxGeometry(W, 0.1, D), mats.floor, 0, -0.05, 0);
-  floor.castShadow = false;
+  add(new THREE.BoxGeometry(W, 0.1, D), mats.floor, 0, -0.05, 0).castShadow = false;
   const WH = 3.2, LOW = 1.0, TH = 0.3;
-  add(new THREE.BoxGeometry(TH, WH, D + TH * 2), mats.wall, X(-TH / 2), WH / 2, 0);
-  add(new THREE.BoxGeometry(TH, LOW, D + TH * 2), mats.wall, X(W + TH / 2), LOW / 2, 0);
-  const re = doors.find(d => d.wall === "rear"), fr = doors.find(d => d.wall === "front");
-  [[0, re.a], [re.b, W]].forEach(([a, b]) => add(new THREE.BoxGeometry(b - a, WH, TH), mats.wall, X((a + b) / 2), WH / 2, Z(D + TH / 2)));
-  add(new THREE.BoxGeometry(re.b - re.a, WH - 2.1, TH), mats.wall, X((re.a + re.b) / 2), 2.1 + (WH - 2.1) / 2, Z(D + TH / 2));
-  add(new THREE.BoxGeometry(re.b - re.a, 2.1, 0.06), mats.door, X((re.a + re.b) / 2), 1.05, Z(D + 0.03));
-  [[0, fr.a], [fr.b, W]].forEach(([a, b]) => add(new THREE.BoxGeometry(b - a, LOW, TH), mats.wall, X((a + b) / 2), LOW / 2, Z(-TH / 2)));
+  add(new THREE.BoxGeometry(TH, WH, D + TH * 2), mats.wall, X(-TH / 2), WH / 2, 0);            // west, full
+  add(new THREE.BoxGeometry(W + TH * 2, WH, TH), mats.wall, 0, WH / 2, Z(D + TH / 2));          // north, full
+  add(new THREE.BoxGeometry(W + TH * 2, LOW, TH), mats.wall, 0, LOW / 2, Z(-TH / 2));           // south, cut
+  [[0, door.a], [door.b, D]].forEach(([a, b]) => add(new THREE.BoxGeometry(TH, LOW, b - a), mats.wall, X(W + TH / 2), LOW / 2, Z((a + b) / 2))); // east, cut
+  add(new THREE.BoxGeometry(TH + 0.04, 0.03, door.b - door.a), mats.door, X(W + TH / 2), 0.02, Z((door.a + door.b) / 2)); // entrance threshold
   partitions.forEach(([x1, y1, x2, y2]) => {
     const len = Math.hypot(x2 - x1, y2 - y1), h = 2.4, t = 0.1;
-    const g = x1 === x2 ? new THREE.BoxGeometry(t, h, len) : new THREE.BoxGeometry(len, h, t);
-    add(g, mats.part, X((x1 + x2) / 2), h / 2, Z((y1 + y2) / 2));
+    add(x1 === x2 ? new THREE.BoxGeometry(t, h, len) : new THREE.BoxGeometry(len, h, t), mats.part, X((x1 + x2) / 2), h / 2, Z((y1 + y2) / 2));
   });
   columns.forEach(c => add(new THREE.CylinderGeometry(0.12, 0.12, 3.2, 20), mats.column, X(c.x), 1.6, Z(c.y)));
+
   const labelAnchors = [];
   items.forEach(it => {
     it.parts.forEach(p => {
       if (p.s === "box") {
         box(p.x, p.y, p.w, p.d, p.h, mats[p.m], p.z || 0);
-        if (p.m === "brick") add(new THREE.BoxGeometry(1.0, 0.35, 0.05), mats.door, X(p.x + p.w / 2), 0.85, Z(p.y - 0.01));
-        if (p.m === "steel" && it.n === 8) { for (let k = 0; k < 3; k++) add(new THREE.BoxGeometry(p.w * 0.85, 0.06, 0.04), mats.door, X(p.x + p.w / 2), 0.45 + k * 0.45, Z(p.y - 0.01)); }
+        if (p.m === "brick") add(new THREE.BoxGeometry(1.0, 0.35, 0.05), mats.dark, X(p.x + p.w / 2), 0.85, Z(p.y - 0.01));
+        if (it.n === 8) for (let k = 0; k < 3; k++) add(new THREE.BoxGeometry(p.w * 0.85, 0.06, 0.04), mats.dark, X(p.x + p.w / 2), 0.45 + k * 0.45, Z(p.y - 0.01));
       } else if (p.s === "cyl") {
         add(new THREE.CylinderGeometry(p.r, p.r * (p.m === "clay" ? 1.1 : 1), p.h, 28), mats[p.m], X(p.x), p.h / 2, Z(p.y));
       } else if (p.s === "rack") {
@@ -386,41 +363,41 @@ svg text { font-family: var(--f-body); }
         [[0, 0], [p.w, 0], [0, p.d], [p.w, p.d]].forEach(([dx, dy]) => box(p.x + dx - 0.02, p.y + dy - 0.02, 0.04, 0.04, p.h, mats.steel));
       }
     });
-    const p = it.parts[0];
-    let ax = p.s === "cyl" ? p.x : p.x + p.w / 2, ay = p.s === "cyl" ? p.y : p.y + p.d / 2, ah = (p.z || 0) + p.h + 0.35;
-    if (it.room) { ax = it.room.x + it.room.w / 2; ay = it.room.y + it.room.d / 2; ah = 2.6; }
-    if (it.n === 16) ah = 3.1;
-    labelAnchors.push({ n: it.n, x: ax, y: ay, h: ah });
+    const b = badgeAt(it), p = it.parts[0];
+    let h = (p.z || 0) + p.h + 0.35;
+    if (it.room) h = 2.6;
+    if (it.n === 16) h = 3.1;
+    if (it.n === 11) h = 3.2;
+    labelAnchors.push({ n: it.n, x: b.x, y: b.y, h });
   });
-  box(0.35, 1.95, 4.1, 0.7, 0.04, mats.wood, 1.05);
+  box(5.65, 0.1, 0.7, 2.35, 0.04, mats.wood, 1.05); // counter top
 
   const labelGroup = new THREE.Group(); scene.add(labelGroup);
   function makeSprites() {
     while (labelGroup.children.length) labelGroup.remove(labelGroup.children[0]);
-    const fill = css("--lapis"), txt = css("--surface");
+    const fill = css("--lapis"), fg = css("--surface");
     labelAnchors.forEach(a => {
       const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
       g.fillStyle = fill; g.beginPath(); g.arc(32, 32, 28, 0, Math.PI * 2); g.fill();
-      g.fillStyle = txt; g.font = "700 28px Inter, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(a.n), 32, 34);
+      g.fillStyle = fg; g.font = "700 28px Inter, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(a.n), 32, 34);
       const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
       s.scale.set(0.42, 0.42, 1); s.position.set(X(a.x), a.h, Z(a.y)); s.renderOrder = 10; labelGroup.add(s);
     });
   }
 
   scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f96, .75));
-  const sun = new THREE.DirectionalLight(0xffffff, .65); sun.position.set(8, 16, 10); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 50 });
-  scene.add(sun);
-  scene.add(new THREE.AmbientLight(0xffffff, .2));
+  const sun = new THREE.DirectionalLight(0xffffff, .65); sun.position.set(10, 16, 9); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 50 });
+  scene.add(sun); scene.add(new THREE.AmbientLight(0xffffff, .2));
 
   function theme() { scene.background = new THREE.Color(css("--bg")); makeSprites(); }
   window.__retheme = theme; theme();
 
   const views = {
-    corner: { p: [11, 10, 14], t: [0, 0.6, 0] },
-    front: { p: [0, 4.5, 17], t: [0, 0.8, 0] },
-    top: { p: [0.01, 30, 0.5], t: [0, 0, 0] },
-    counter: { p: [X(1.2), 1.65, Z(0.6)], t: [X(3.2), 1.2, Z(6)] }
+    corner: { p: [12, 10, 12], t: [0, 0.6, 0] },
+    yard: { p: [15, 4.5, Z(2)], t: [0, 0.8, 0] },
+    top: { p: [0.01, 24, 0.5], t: [0, 0, 0] },
+    counter: { p: [X(8.6), 1.65, Z(1.2)], t: [X(3.0), 1.1, Z(4.5)] }
   };
   function setView(k) {
     const v = views[k]; camera.position.set(...v.p); controls.target.set(...v.t); controls.update();
